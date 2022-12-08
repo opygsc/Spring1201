@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.human.dao.IF_BoardDAO">
+	<insert id="insertOne" parameterType="com.human.vo.BoardVO"> <!-- 파라미터 타입 생략가능 -->
+		insert into board1201
+		values
+		(board1201_cnt.nextval,#{name},#{email},#{title},#{content},#{pw},default,default)
+	</insert>
+	<!-- 쿼리문, 파라미터, 리턴값 >> 자료형이 무엇? 파라미터는 객체? String? Integer? 리턴값은 단일 객체?, 
+		String? Integer? List -->
+
+	<select id="selectAll" resultType="com.human.vo.BoardVO">
+		select t.* from (select sub.*, rownum as rnum from (select * from
+		board1201 order by num DESC) sub) t
+		where rnum between #{startNo} and
+		#{endNo}
+	</select>
+
+
+	<select id="selectOne" resultType="com.human.vo.BoardVO">
+		select * from board1201 where
+		num = #{vNo}
+	</select> <!-- 이 쿼리는 글 자세히보기 기능을 위한 쿼리, 미리 예측금지, 코드만 보고 해석 이 쿼리는 vNo글을 가져오는 쿼리, -> 
+		글 자세히보기 활용, 글 수정에도 활용 가능 -->
+
+
+	<update id="updateBoard">
+		update board1201 set
+		pw=#{pw},email=#{email},title=#{title},content=#{content} where
+		num=#{num}
+	</update>
+
+	<delete id="deleteBoard">
+		delete from board1201 where num=#{vNo}
+	</delete>
+
+
+	<select id="countBoard" resultType="int">
+		select count(*) from
+		board1201
+	</select>
+
+
+	<insert id="boardAttach">
+		insert into board1201_attach values ((select max(num)
+		from board1201),#{fileName},default)
+	</insert>
+
+	<select id="selectAttach" resultType="String">
+		select fName from
+		board1201_attach where num=#{vNo}
+	</select>
+
+
+	<update id="cntPlus">
+		update board1201 set cnt=cnt+1 where num=#{vNo}
+	</update>
+</mapper>
+
+<!-- 쿼리문, 파라미터, 리턴값 >> 자료형이 무엇? 파라미터는 객체? String? Integer? 리턴값은 단일 객체?, String? 
+	Integer? List -->
